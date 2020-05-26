@@ -7,6 +7,10 @@ VIRTUAL_HEIGHT = 243
 X_PAD_ONE = 5
 x_PAD_TWO = VIRTUAL_WIDTH - 10
 
+local bred = 40 / 255
+local bgreen = 45 / 255
+local bblue = 100 / 255
+
 push = require 'utils/push'
 Class = require 'utils/class'
 
@@ -33,7 +37,7 @@ function love.load()
     paddleOne = Paddle(X_PAD_ONE, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
     paddleTwo = Paddle(x_PAD_TWO, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
 
-    ball = Ball(VIRTUAL_WIDTH / 2 - 2.5, VIRTUAL_WIDTH / 2 - 2.5, 5, 5)
+    ball = Ball(VIRTUAL_WIDTH / 2 - 2.5, VIRTUAL_HEIGHT / 2 - 2.5, 5, 5)
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -67,8 +71,9 @@ function love.draw()
     -- draw left padd 
     paddleOne:render()
     -- draw right padd 
-    paddleTwo:render()
+    paddleTwo:render() 
     drawText()
+    drawFPS()
     push:apply('end')
 end
 

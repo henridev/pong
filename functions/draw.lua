@@ -1,7 +1,3 @@
-local bred = 40 / 255
-local bgreen = 45 / 255
-local bblue = 52 / 255
-
 function drawText()
     love.graphics.setFont(smallFont)
     if gameState == "start" then
@@ -16,3 +12,9 @@ function drawText()
     love.graphics.print(playerTwoScore, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
 end
 
+function drawFPS()
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.setFont(smallFont)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 40, 20)
+    love.graphics.setColor(1, 1, 1, 1)
+end
