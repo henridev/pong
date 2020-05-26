@@ -10,9 +10,14 @@ x_PAD_TWO = VIRTUAL_WIDTH - 10
 push = require 'push'
 require 'physics'
 require 'draw'
+require 'keys'
 
 
 function love.load()
+    math.randomseed(os.time())
+
+    gameState = "start"
+
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
     smallFont = love.graphics.newFont('assets/retro.TTF', 8) -- create font object 
@@ -23,6 +28,12 @@ function love.load()
 
     padOneY = VIRTUAL_HEIGHT / 2 - 2.5
     padTwoY = VIRTUAL_HEIGHT / 2 - 2.5
+
+    ballX = VIRTUAL_WIDTH / 2 - 2.5
+    ballY = VIRTUAL_HEIGHT / 2 - 2.5
+
+    ballDX = math.random(2) == 1 and -100 or 100
+    ballDY = math.random(-50, 50)
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -36,10 +47,14 @@ function love.update(dt)
         renderPad('playerOne', 'down', dt)
     elseif love.keyboard.isDown("z") then 
         renderPad('playerOne', 'up', dt)
-    elseif love.keyboard.isDown("down") then
+    end
+    if love.keyboard.isDown("down") then
         renderPad('playerTwo', 'down', dt)
     elseif love.keyboard.isDown("up") then 
         renderPad('playerTwo', 'up', dt)
+    end
+    if gameState == 'play' then
+        renderBall(dt)
     end
 end
 
@@ -54,5 +69,9 @@ end
 function love.keypressed(key)
     if key == "escape" then
         love.event.quit()
+    elseif key == "enter" or key == "return" then
+        startGame()
+    elseif key == "space" then 
+        pauseGame() 
     end
 end
