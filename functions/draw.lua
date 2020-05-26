@@ -17,11 +17,11 @@ function drawText()
 end
 
 function drawBoard()
-    love.graphics.clear(bred, bgreen, bblue, 0.8)
+    
     -- draw the ball 
     love.graphics.rectangle('fill', ballX , ballY , 5, 5)
     -- draw left padd 
-    love.graphics.rectangle('fill', X_PAD_ONE, padOneY, 5, 20)
+    PaddleOne:render()
     -- draw right padd 
-    love.graphics.rectangle('fill', x_PAD_TWO, padTwoY , 5, 20)
+    PaddleTwo:render()
 end

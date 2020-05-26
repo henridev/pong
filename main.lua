@@ -7,10 +7,14 @@ VIRTUAL_HEIGHT = 243
 X_PAD_ONE = 5
 x_PAD_TWO = VIRTUAL_WIDTH - 10
 
-push = require 'push'
-require 'physics'
-require 'draw'
-require 'keys'
+push = require 'utils/push'
+Class = require 'utils/class'
+
+require "classes/Ball"
+require "classes/Paddle"
+
+require 'functions/draw'
+require 'functions/keys'
 
 
 function love.load()
@@ -26,14 +30,10 @@ function love.load()
     playerOneScore = 0
     playerTwoScore = 0
 
-    padOneY = VIRTUAL_HEIGHT / 2 - 2.5
-    padTwoY = VIRTUAL_HEIGHT / 2 - 2.5
+    paddleOne = Paddle(X_PAD_ONE, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
+    paddleTwo = Paddle(x_PAD_TWO, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
 
-    ballX = VIRTUAL_WIDTH / 2 - 2.5
-    ballY = VIRTUAL_HEIGHT / 2 - 2.5
-
-    ballDX = math.random(2) == 1 and -100 or 100
-    ballDY = math.random(-50, 50)
+    ball = Ball(VIRTUAL_WIDTH / 2 - 2.5, VIRTUAL_WIDTH / 2 - 2.5, 5, 5)
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -44,23 +44,24 @@ end
 
 function love.update(dt)
     if love.keyboard.isDown("s") then
-        renderPad('playerOne', 'down', dt)
+        paddleOne:update('down', dt)
     elseif love.keyboard.isDown("z") then 
-        renderPad('playerOne', 'up', dt)
+        paddleOne:update('up', dt)
     end
     if love.keyboard.isDown("down") then
-        renderPad('playerTwo', 'down', dt)
+        paddleTwo:update('down', dt)
     elseif love.keyboard.isDown("up") then 
-        renderPad('playerTwo', 'up', dt)
+        paddleTwo:update('up', dt)
     end
     if gameState == 'play' then
-        renderBall(dt)
+        ball:update(dt)
     end
 end
 
 
 function love.draw()
     push:apply('start')
+    love.graphics.clear(bred, bgreen, bblue, 0.8)
     drawBoard()
     drawText()
     push:apply('end')
