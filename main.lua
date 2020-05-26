@@ -7,12 +7,9 @@ VIRTUAL_HEIGHT = 243
 X_PAD_ONE = 5
 x_PAD_TWO = VIRTUAL_WIDTH - 10
 
-local bred = 20 / 255
-local bgreen = 20 / 255
-local bblue = 230 / 255
-
-
 push = require 'push'
+require 'physics'
+require 'draw'
 
 
 function love.load()
@@ -34,15 +31,15 @@ function love.load()
     })
 end
 
-function love.update()
+function love.update(dt)
     if love.keyboard.isDown("s") then
-        renderPad('playerOne', 'down')
+        renderPad('playerOne', 'down', dt)
     elseif love.keyboard.isDown("z") then 
-        renderPad('playerOne', 'up')
+        renderPad('playerOne', 'up', dt)
     elseif love.keyboard.isDown("down") then
-        renderPad('playerTwo', 'down')
+        renderPad('playerTwo', 'down', dt)
     elseif love.keyboard.isDown("up") then 
-        renderPad('playerTwo', 'up')
+        renderPad('playerTwo', 'up', dt)
     end
 end
 
@@ -54,54 +51,8 @@ function love.draw()
     push:apply('end')
 end
 
--- exit game 
 function love.keypressed(key)
     if key == "escape" then
         love.event.quit()
-    end
-end
-
-
-
-function drawText()
-    love.graphics.setFont(smallFont)
-    love.graphics.printf('Hello Pong!', 0, 20, VIRTUAL_WIDTH, 'center')
-    love.graphics.setFont(largeFont)
-    love.graphics.print(playerOneScore, VIRTUAL_WIDTH / 2 - 50 , VIRTUAL_HEIGHT / 3)
-    love.graphics.print(playerTwoScore, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
-end
-
-function drawBoard()
-    love.graphics.clear(bred, bgreen, bblue, 0.8)
-    -- draw the ball 
-    love.graphics.rectangle('fill', VIRTUAL_WIDTH / 2 - 2.5, VIRTUAL_HEIGHT / 2 - 2.5, 5, 5)
-    -- draw left padd 
-    love.graphics.rectangle('fill', X_PAD_ONE, padOneY, 5, 20)
-    -- draw right padd 
-    love.graphics.rectangle('fill', x_PAD_TWO, padTwoY , 5, 20)
-end
-
-function renderPad(player, direction)
-    love.graphics.clear(bred, bgreen, bblue, 0.8)
-    if player == 'playerOne' then
-        love.graphics.rectangle('fill', X_PAD_ONE, padOneY, 5, 20)
-        love.graphics.setColor(1, 1, 1, 1)
-        if direction == 'down' then
-            padOneY = padOneY + 1
-            love.graphics.rectangle('fill', X_PAD_ONE, padOneY, 5, 20)
-        elseif direction == 'up' then 
-            padOneY = padOneY - 1
-            love.graphics.rectangle('fill', X_PAD_ONE, padOneY, 5, 20)
-        end
-    elseif player == 'playerTwo' then
-        love.graphics.rectangle('fill', x_PAD_TWO, padTwoY, 5, 20)
-        love.graphics.setColor(1, 1, 1, 1)
-        if direction == 'down' then
-            padTwoY = padTwoY + 1
-            love.graphics.rectangle('fill', x_PAD_TWO, padTwoY, 5, 20)
-        elseif direction == 'up' then 
-            padTwoY = padTwoY - 1
-            love.graphics.rectangle('fill', x_PAD_TWO, padTwoY, 5, 20)
-        end
     end
 end
