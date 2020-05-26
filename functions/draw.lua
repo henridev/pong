@@ -16,12 +16,3 @@ function drawText()
     love.graphics.print(playerTwoScore, VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
 end
 
-function drawBoard()
-    
-    -- draw the ball 
-    love.graphics.rectangle('fill', ballX , ballY , 5, 5)
-    -- draw left padd 
-    PaddleOne:render()
-    -- draw right padd 
-    PaddleTwo:render()
-end

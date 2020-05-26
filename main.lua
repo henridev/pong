@@ -62,7 +62,12 @@ end
 function love.draw()
     push:apply('start')
     love.graphics.clear(bred, bgreen, bblue, 0.8)
-    drawBoard()
+    -- draw the ball 
+    ball:render()
+    -- draw left padd 
+    paddleOne:render()
+    -- draw right padd 
+    paddleTwo:render()
     drawText()
     push:apply('end')
 end
