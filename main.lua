@@ -27,7 +27,7 @@ require 'functions/keys'
 
 function love.load()
 
-
+    tmp = 0
     --region OTHER SETUP
         love.graphics.setDefaultFilter('nearest', 'nearest')
         push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -51,9 +51,8 @@ function love.load()
     --endregion
 
     --region FONTS
-        love.window.setTitle('ping pong')
-        smallFont = love.graphics.newFont('assets/font.TTF', 8) 
-        largeFont = love.graphics.newFont('assets/font.TTF', 32) 
+        smallFont = love.graphics.newFont('assets/fonts/font.TTF', 8) 
+        largeFont = love.graphics.newFont('assets/fonts/font.TTF', 32) 
         love.graphics.setFont(smallFont)
     --endregion
 
@@ -135,7 +134,9 @@ function love.draw()
         drawText()
     end
     drawFPS()
-    love.graphics.print("moves:", 100, 100)
+
+    playerOne:debug()
+
     push:apply('end')
 end
 
