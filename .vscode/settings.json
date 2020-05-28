@@ -9,5 +9,6 @@
             //insertion
             "foldStartRegex": "[\\s]*--region[\\s]*(.*)" ////Regex used to find fold start text.
         }
-    }
+    },
+    "pixelbyte.love2d.debug": true
 }
