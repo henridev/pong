@@ -26,33 +26,31 @@ require 'functions/keys'
 
 function love.load()
     love.graphics.setDefaultFilter('nearest', 'nearest')
-
     math.randomseed(os.time())
 
-  --region GAME STATE
-    -- can be start / play / pause / serve / end
-    gameState = "start"
+    --region GAME STATE
+        -- can be start / play / pause / serve / end
+        gameState = "start"
 
-    -- totla game score
-    playerOneScore = 0
-    playerTwoScore = 0
+        -- totla game score
+        playerOneScore = 0
+        playerTwoScore = 0
 
-    -- who scored last
-    scored = nil
-  --endregion
+        -- who scored last
+        scored = nil
+    --endregion
 
-  --region FONTS
-    love.window.setTitle('ping pong')
-    smallFont = love.graphics.newFont('assets/font.TTF', 8) 
-    largeFont = love.graphics.newFont('assets/font.TTF', 32) 
-    love.graphics.setFont(smallFont)
-  --endregion
-
+    --region FONTS
+        love.window.setTitle('ping pong')
+        smallFont = love.graphics.newFont('assets/font.TTF', 8) 
+        largeFont = love.graphics.newFont('assets/font.TTF', 32) 
+        love.graphics.setFont(smallFont)
+    --endregion
 
     --region AUDIO
     sounds = {
         ["paddle_hit"] = love.audio.newSource('assets/audio/ping.mp3', 'stream'),
-        ["wall_hit"] = love.audio.newSource('assets/audio/wall.mp3', 'stream'),
+        ["wall_hit"] = love.audio.newSource('assets/audio/wall.wav', 'static'),
         ["victory"] = love.audio.newSource('assets/audio/victory.wav', 'static')
     }
     --endregion
@@ -151,3 +149,7 @@ function love.keypressed(key)
         pauseGame() 
     end
 end
+
+function love.resize(w, h)
+    push: resize(w, h)
+ end
