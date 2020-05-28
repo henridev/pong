@@ -41,11 +41,21 @@ function love.load()
     scored = nil
   --endregion
 
+  --region FONTS
     love.window.setTitle('ping pong')
-
     smallFont = love.graphics.newFont('assets/font.TTF', 8) 
     largeFont = love.graphics.newFont('assets/font.TTF', 32) 
     love.graphics.setFont(smallFont)
+  --endregion
+
+
+    --region AUDIO
+    sounds = {
+        ["paddle_hit"] = love.audio.newSource('assets/audio/ping.mp3', 'stream'),
+        ["wall_hit"] = love.audio.newSource('assets/audio/wall.mp3', 'stream'),
+        ["victory"] = love.audio.newSource('assets/audio/victory.wav', 'static')
+    }
+    --endregion
 
     --region CLASSES
     playerOne = Paddle(X_PAD_ONE, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
@@ -86,8 +96,9 @@ function love.update(dt)
         if ball:playerOneMiss() then 
             playerTwoScore = playerTwoScore + 1
             scored = "playerTwo"
-            if playerTwoScore > 1 then 
+            if playerTwoScore >= 10 then 
                 gameState = "end"
+                sounds['victory']:play()
                 ball:reset('random')
             else 
                 gameState = "serve"
@@ -98,14 +109,17 @@ function love.update(dt)
         if ball:playerTwoMiss() then 
             playerOneScore = playerOneScore + 1
             scored = "playerOne"
-            if playerOneScore > 1 then 
+            if playerOneScore >= 10 then 
                 gameState = "end"
+                sounds['victory']:play()
                 ball:reset('random')
             else 
                 gameState = "serve"
                 ball:reset('playerOne')
             end            
         end
+
+        
     end
 end
 

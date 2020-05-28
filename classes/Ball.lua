@@ -18,7 +18,7 @@ function Ball:collides(box)
     if self.y > box.y + box.height or self.y + self.height < box.y then
         return false
     end
-
+    sounds['paddle_hit']:play()
     return true 
 end
 
@@ -28,9 +28,11 @@ function Ball:contain()
     if self.y <= 0 then 
         self.dy = -self.dy
         self.y = 0
+        sounds['wall_hit']:play()
     elseif self.y >= VIRTUAL_HEIGHT - 5 then 
         self.dy = -self.dy
         self.y = VIRTUAL_HEIGHT - 5
+        sounds['wall_hit']:play()
     end
 end
 
