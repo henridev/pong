@@ -1,0 +1,1 @@
+- region folding in vscode to make a region `ctrl+m and ctrl+r` while wrapped region is selected

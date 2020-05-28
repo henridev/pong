@@ -1,3 +1,4 @@
+--region CONSTANTS
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
@@ -10,7 +11,9 @@ x_PAD_TWO = VIRTUAL_WIDTH - 10
 local bred = 40 / 255
 local bgreen = 45 / 255
 local bblue = 100 / 255
+--endregion
 
+--region IMPORTS
 push = require 'utils/push'
 Class = require 'utils/class'
 
@@ -19,25 +22,34 @@ require "classes/Paddle"
 
 require 'functions/draw'
 require 'functions/keys'
-
+--endregion
 
 function love.load()
-    math.randomseed(os.time())
-
-    gameState = "start"
-
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
-    smallFont = love.graphics.newFont('assets/retro.TTF', 8) -- create font object 
-    largeFont = love.graphics.newFont('assets/mario.TTF', 32) -- create font object 
+    math.randomseed(os.time())
+
+  --region GAME STATE
+    gameState = "start"
 
     playerOneScore = 0
     playerTwoScore = 0
 
-    paddleOne = Paddle(X_PAD_ONE, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
-    paddleTwo = Paddle(x_PAD_TWO, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
+    scored = nil
+  --endregion
+
+    love.window.setTitle('ping pong')
+
+    smallFont = love.graphics.newFont('assets/font.TTF', 8) -- create font object 
+    largeFont = love.graphics.newFont('assets/font.TTF', 32) -- create font object 
+    love.graphics.setFont(smallFont)
+
+    --region CLASSES
+    playerOne = Paddle(X_PAD_ONE, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
+    playerTwo = Paddle(x_PAD_TWO, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2.5, VIRTUAL_HEIGHT / 2 - 2.5, 5, 5)
+    --endregion
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -48,17 +60,41 @@ end
 
 function love.update(dt)
     if love.keyboard.isDown("s") then
-        paddleOne:update('down', dt)
+        playerOne:update('down', dt)
     elseif love.keyboard.isDown("z") then 
-        paddleOne:update('up', dt)
+        playerOne:update('up', dt)
     end
     if love.keyboard.isDown("down") then
-        paddleTwo:update('down', dt)
+        playerTwo:update('down', dt)
     elseif love.keyboard.isDown("up") then 
-        paddleTwo:update('up', dt)
+        playerTwo:update('up', dt)
     end
     if gameState == 'play' then
         ball:update(dt)
+
+        if ball:collides(playerOne) then
+            ball.dx = -ball.dx
+        elseif ball:collides(playerTwo) then
+            ball.dx = -ball.dx
+        end 
+    
+        ball:contain() 
+    
+        if ball:playerOneMiss() then 
+            playerTwoScore = playerTwoScore + 1
+            -- input who is serving
+            ball:reset('playerTwo')
+            gameState = "serve"
+            scored = "playerTwo"
+        end
+    
+        if ball:playerTwoMiss() then 
+            playerOneScore = playerOneScore + 1
+            ball:reset('playerOne')
+            gameState = "serve"
+            scored = "playerOne"
+        end
+
     end
 end
 
@@ -69,10 +105,14 @@ function love.draw()
     -- draw the ball 
     ball:render()
     -- draw left padd 
-    paddleOne:render()
+    playerOne:render()
     -- draw right padd 
-    paddleTwo:render() 
-    drawText()
+    playerTwo:render() 
+    if gameState == "serve" then
+        drawText(scored)
+    else
+        drawText()
+    end
     drawFPS()
     push:apply('end')
 end
