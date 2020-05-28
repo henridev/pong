@@ -1,7 +1,7 @@
 function startGame()
     if gameState == "start" or gameState == "serve" then
         gameState = "play"
-    elseif gameState == "play" or gameState == "pause" then
+    elseif gameState == "play" or gameState == "pause" or gameState == "end" then
         gameState = "start"
         ball:reset('random')
         resetScore()

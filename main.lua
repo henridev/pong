@@ -30,18 +30,21 @@ function love.load()
     math.randomseed(os.time())
 
   --region GAME STATE
+    -- can be start / play / pause / serve / end
     gameState = "start"
 
+    -- totla game score
     playerOneScore = 0
     playerTwoScore = 0
 
+    -- who scored last
     scored = nil
   --endregion
 
     love.window.setTitle('ping pong')
 
-    smallFont = love.graphics.newFont('assets/font.TTF', 8) -- create font object 
-    largeFont = love.graphics.newFont('assets/font.TTF', 32) -- create font object 
+    smallFont = love.graphics.newFont('assets/font.TTF', 8) 
+    largeFont = love.graphics.newFont('assets/font.TTF', 32) 
     love.graphics.setFont(smallFont)
 
     --region CLASSES
@@ -82,19 +85,27 @@ function love.update(dt)
     
         if ball:playerOneMiss() then 
             playerTwoScore = playerTwoScore + 1
-            -- input who is serving
-            ball:reset('playerTwo')
-            gameState = "serve"
             scored = "playerTwo"
+            if playerTwoScore > 1 then 
+                gameState = "end"
+                ball:reset('random')
+            else 
+                gameState = "serve"
+                ball:reset('playerTwo')
+            end
         end
     
         if ball:playerTwoMiss() then 
             playerOneScore = playerOneScore + 1
-            ball:reset('playerOne')
-            gameState = "serve"
             scored = "playerOne"
+            if playerOneScore > 1 then 
+                gameState = "end"
+                ball:reset('random')
+            else 
+                gameState = "serve"
+                ball:reset('playerOne')
+            end            
         end
-
     end
 end
 
@@ -108,7 +119,7 @@ function love.draw()
     playerOne:render()
     -- draw right padd 
     playerTwo:render() 
-    if gameState == "serve" then
+    if gameState == "serve" or gameState == "end" then
         drawText(scored)
     else
         drawText()

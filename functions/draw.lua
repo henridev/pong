@@ -1,4 +1,4 @@
-function drawText(playerScored)
+function drawText()
     love.graphics.setFont(smallFont)
     if gameState == "start" then
         love.graphics.printf('Hello Pong!', 0, 20, VIRTUAL_WIDTH, 'center')
@@ -8,11 +8,20 @@ function drawText(playerScored)
     elseif gameState == "pause" then
         love.graphics.printf('paused', 0, 20, VIRTUAL_WIDTH, 'center')
     elseif gameState == "serve" then
-        if playerScored == 'playerTwo' then 
-            love.graphics.printf('Player two scored player one serves', 0, 20, VIRTUAL_WIDTH, 'center')
-        elseif playerScored == 'playerOne' then 
-            love.graphics.printf('Player one scored player two serves', 0, 20, VIRTUAL_WIDTH, 'center')
+        if scored == 'playerTwo' then 
+            love.graphics.printf('Player two scored', 0, 20, VIRTUAL_WIDTH, 'center')
+            love.graphics.printf('press enter to serve player one', 0, 35, VIRTUAL_WIDTH, 'center')
+        else
+            love.graphics.printf('Player one scored', 0, 20, VIRTUAL_WIDTH, 'center')
+            love.graphics.printf('press enter to serve player two', 0, 35, VIRTUAL_WIDTH, 'center')
         end
+    elseif gameState == "end" then
+        if scored == 'playerTwo' then 
+            love.graphics.printf('Player two won congratulations!', 0, 20, VIRTUAL_WIDTH, 'center')
+        else
+            love.graphics.printf('Player one won congratulations!', 0, 20, VIRTUAL_WIDTH, 'center')
+        end
+        love.graphics.printf('press enter to restart!', 0, 35, VIRTUAL_WIDTH, 'center')
     end
     love.graphics.setFont(largeFont)
     love.graphics.print(playerOneScore, VIRTUAL_WIDTH / 2 - 50 , VIRTUAL_HEIGHT / 3)
