@@ -35,7 +35,10 @@ function AI:render()
 end
 
 function AI:debug()
+    -- if 60 FPS this will be around 3.3 
+    --> if speed at 200 pixels and time since update 0.016 (1/60) then 0.016*200 = 3.3
     love.graphics.print("moves at pixels per frame: " ..tostring(self.pixelPerFrame), 200, 200)
+    
 end
 
 

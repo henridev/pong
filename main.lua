@@ -8,9 +8,11 @@ VIRTUAL_HEIGHT = 243
 X_PAD_ONE = 5
 x_PAD_TWO = VIRTUAL_WIDTH - 10
 
-local bred = 40 / 255
-local bgreen = 45 / 255
-local bblue = 100 / 255
+BRED = 40 / 255
+BGREEN = 45 / 255
+BBLUE = 100 / 255
+
+GAME_STATES = {setup = "setup", start = "start", play = "play" , pause = "pause", serve = "serve", gameOver = "gameOver"}
 --endregion
 
 --region IMPORTS
@@ -19,6 +21,7 @@ Class = require 'utils/class'
 
 require "classes/Ball"
 require "classes/Paddle"
+require "classes/PaddleV2"
 require "classes/AI"
 
 require 'functions/draw'
@@ -39,10 +42,9 @@ function love.load()
     --endregion
 
     --region GAME STATE
-        -- can be start / play / pause / serve / end
-        gameState = "start"
+        gameState = GAME_STATES.start
 
-        -- totla game score
+        -- total game score
         playerOneScore = 0
         playerTwoScore = 0
 
@@ -65,7 +67,7 @@ function love.load()
     --endregion
 
     --region CLASSES
-    playerOne = AI(X_PAD_ONE, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200, 'impossible')
+    playerOne = PaddleV2(X_PAD_ONE, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200, 'impossible') -- Change for ai 
     playerTwo = Paddle(x_PAD_TWO, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2.5, VIRTUAL_HEIGHT / 2 - 2.5, 5, 5)
@@ -78,12 +80,12 @@ end
 -- dt = time since last update in # seconds 
 function love.update(dt)
     --region PLAYER ONE MOVE
-    -- if love.keyboard.isDown("s") then
-    --     playerOne:update('down', dt)
-    -- elseif love.keyboard.isDown("z") then 
-    --     playerOne:update('up', dt)
-    -- end
-       playerOne:update(ball, dt)
+    if love.keyboard.isDown("s") then
+        playerOne:update('down', dt)
+    elseif love.keyboard.isDown("z") then 
+        playerOne:update('up', dt)
+    end
+    --    playerOne:update(ball, dt)
     --endregion
 
     --region PLAYER TWO MOVE 
@@ -95,7 +97,7 @@ function love.update(dt)
     --endregion
 
     --region BALL MOVEMENT and COLLISSION
-    if gameState == 'play' then
+    if gameState == GAME_STATES.play then
         -- Ball movement
         ball:update(dt)
         -- Ball X paddle collission check
@@ -120,7 +122,7 @@ end
 function love.draw()
     push:apply('start')
     -- clear full screen 
-    love.graphics.clear(bred, bgreen, bblue, 0.8)
+    love.graphics.clear(BRED, BGREEN, BBLUE, 0.8)
     -- draw the ball 
     ball:render()
     -- draw left padd 
@@ -128,18 +130,19 @@ function love.draw()
     -- draw right padd 
     playerTwo:render() 
     -- if scored or end pass last scored in to display correct msg
-    if gameState == "serve" or gameState == "end" then
+    if gameState == GAME_STATES.serve or GAME_STATES.gameOver then
         drawText(scored)
     else
         drawText()
     end
     drawFPS()
 
-    playerOne:debug()
+    -- playerOne:debug()
 
     push:apply('end')
 end
 
+-- callback executed on every key press 
 function love.keypressed(key)
     if key == "escape" then
         love.event.quit()
@@ -159,11 +162,11 @@ function playerOneMissUpdate()
     playerTwoScore = playerTwoScore + 1
     scored = "playerTwo"
     if playerTwoScore >= 10 then 
-        gameState = "end"
+        gameState = GAME_STATES.gameOver
         sounds['victory']:play()
         ball:reset('random')
     else 
-        gameState = "serve"
+        gameState = GAME_STATES.serve
         ball:reset('playerTwo')
     end
 end
@@ -172,11 +175,11 @@ function playerTwoMissUpdate()
     playerOneScore = playerOneScore + 1
     scored = "playerOne"
     if playerOneScore >= 10 then 
-        gameState = "end"
+        gameState = GAME_STATES.gameOver
         sounds['victory']:play()
         ball:reset('random')
     else 
-        gameState = "serve"
+        gameState = GAME_STATES.gameOver
         ball:reset('playerOne')
     end        
 end
