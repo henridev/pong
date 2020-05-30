@@ -29,8 +29,6 @@ require 'functions/keys'
 --endregion
 
 function love.load()
-
-    tmp = 0
     --region OTHER SETUP
         love.graphics.setDefaultFilter('nearest', 'nearest')
         push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -43,7 +41,7 @@ function love.load()
 
     --region GAME STATE
         gameState = GAME_STATES.start
-
+        difficulty = "hard"
         -- total game score
         playerOneScore = 0
         playerTwoScore = 0
@@ -67,12 +65,11 @@ function love.load()
     --endregion
 
     --region CLASSES
-    playerOne = PaddleV2(X_PAD_ONE, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200, 'impossible') -- Change for ai 
+    playerOne = AI(X_PAD_ONE, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
     playerTwo = Paddle(x_PAD_TWO, VIRTUAL_HEIGHT / 2 - 2.5, 5, 20, 200)
 
     ball = Ball(VIRTUAL_WIDTH / 2 - 2.5, VIRTUAL_HEIGHT / 2 - 2.5, 5, 5)
     --endregion
-
     
 end
 
@@ -80,12 +77,12 @@ end
 -- dt = time since last update in # seconds 
 function love.update(dt)
     --region PLAYER ONE MOVE
-    if love.keyboard.isDown("s") then
-        playerOne:update('down', dt)
-    elseif love.keyboard.isDown("z") then 
-        playerOne:update('up', dt)
-    end
-    --    playerOne:update(ball, dt)
+    -- if love.keyboard.isDown("s") then
+    --     playerOne:update('down', dt)
+    -- elseif love.keyboard.isDown("z") then 
+    --     playerOne:update('up', dt)
+    -- end
+    playerOne:update(ball, dt, difficulty)
     --endregion
 
     --region PLAYER TWO MOVE 
@@ -102,8 +99,12 @@ function love.update(dt)
         ball:update(dt)
         -- Ball X paddle collission check
         if ball:collides(playerOne) then
+            -- gradualy increase ball speed
+            ball.dx = ball.dx - 5 
             ball.dx = -ball.dx
         elseif ball:collides(playerTwo) then
+            -- gradually increase ball speed 
+            ball.dx = ball.dx + 5 
             ball.dx = -ball.dx
         else
             if ball:playerOneMiss() then 
@@ -123,22 +124,15 @@ function love.draw()
     push:apply('start')
     -- clear full screen 
     love.graphics.clear(BRED, BGREEN, BBLUE, 0.8)
-    -- draw the ball 
-    ball:render()
+    drawText()
+    drawFPS()
+
     -- draw left padd 
     playerOne:render()
     -- draw right padd 
     playerTwo:render() 
-    -- if scored or end pass last scored in to display correct msg
-    if gameState == GAME_STATES.serve or GAME_STATES.gameOver then
-        drawText(scored)
-    else
-        drawText()
-    end
-    drawFPS()
-
-    -- playerOne:debug()
-
+    -- draw the ball 
+    ball:render()
     push:apply('end')
 end
 
@@ -179,7 +173,7 @@ function playerTwoMissUpdate()
         sounds['victory']:play()
         ball:reset('random')
     else 
-        gameState = GAME_STATES.gameOver
+        gameState = GAME_STATES.serve
         ball:reset('playerOne')
     end        
 end

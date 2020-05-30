@@ -1,3 +1,4 @@
+
 function startGame()
     if gameState == GAME_STATES.start or gameState == GAME_STATES.serve then
         gameState = GAME_STATES.play

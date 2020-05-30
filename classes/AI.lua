@@ -13,20 +13,21 @@ function AI:init(x, y, width , height, speed, level)
     self.pixelPerFrame = 0
 end
 
-function AI:update(ball, dt)
-    
-    -- if ball.y > self.y then
-    --     tmp = self.dy * dt
-    --     love.graphics.print("moves:" ..tostring(tmp), 100, 100)
-    --     self.y = math.min(VIRTUAL_HEIGHT - 20, self.y + (self.dy * dt))
-    -- elseif ball.y < self.y then 
-    --     self.y = math.max(0, self.y - (self.dy * dt))
-    -- end
-    self.pixelPerFrame = self.dy * dt
-    if self.level == "impossible" then 
-        self.y = ball.y
+function AI:update(ball, dt, difficulty)    
+    if difficulty == "hard" then 
+        self.dy = math.random(45,50)
+    elseif difficulty == "medium" then
+        self.dy = math.random(30,45)
+    elseif difficulty == "easy" then
+        self.dy = math.random(25,30)
+    else 
+        self.dy = math.random(30,45)
     end
-    return self.dy * dt
+    if ball.y > self.y then 
+        self.y = math.min(VIRTUAL_HEIGHT - 20, self.y + (self.dy * dt))
+    elseif ball.y < self.y then 
+        self.y = math.max(0, self.y - (self.dy * dt))
+    end
 end
 
 

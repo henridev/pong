@@ -1,5 +1,4 @@
 Paddle = Class{}
-local VIRTUAL_HEIGHT = 243
 
 function Paddle:init(x, y, width , height, speed)
     self.x = x 

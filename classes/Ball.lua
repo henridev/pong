@@ -69,7 +69,7 @@ function Ball:reset(serveTo)
     else
         self.dx = math.random(2) == 1 and -100 or 100
     end
-    self.x = VIRTUAL_WIDTH / 2 - 2.5
-    self.y = VIRTUAL_HEIGHT / 2 - 2.5
+    self.x = VIRTUAL_WIDTH / 2 - (self.width / 2)
+    self.y = VIRTUAL_HEIGHT / 2 - (self.width / 2)
     self.dy = math.random(-50, 50)
 end

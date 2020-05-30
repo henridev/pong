@@ -33,6 +33,10 @@ function drawText()
     scoreDraw()
 end
 
+function drawSetup()
+    
+end
+
 function drawFPS()
     love.graphics.setColor(0, 1, 0, 1)
     love.graphics.setFont(smallFont)
